@@ -4,20 +4,20 @@ from pydantic import Field
 
 class Settings(BaseSettings):
     # API Configuration
-    api_v1_prefix: str = Field("/api/v1", env = "API_V1_PREFIX")
+    API_V1_PREFIX: str = "/api/v1"
     
     # Database
-    postgres_dsn: str = Field("postgresql://practice@localhost/practice", env = "POSTGRES_DSN")
+    POSTGRES_DSN: str = "postgresql://practice@localhost/practice"
     
     # Redis
-    redis_url: str =  Field("redis://localhost:6379/0", env = "REDIS_URL")
+    REDIS_URL: str = "redis://localhost:6379/0"
     
     # External APIs
-    openai_api_key: str = Field("", env="OPENAI_API_KEY")
+    OPENAI_API_KEY: str = ""
     
     # Environment
-    environment: str = Field("development", env="ENVIRONMENT")
-    debug: bool = Field(True, env="DEBUG")
+    ENVIRONMENT: str = "development"
+    DEBUG: bool = True
     
     model_config = SettingsConfigDict(
         env_file=".env",

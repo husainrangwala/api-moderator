@@ -21,10 +21,11 @@ config = context.config
 
 # 4. Override the sqlalchemy.url in alembic.ini with your Settings value
 settings = get_settings()
-config.set_main_option("sqlalchemy.url", settings.postgres_dsn)
+config.set_main_option("sqlalchemy.url", settings.POSTGRES_DSN)
 
-# 5. Set up Python logging per alembic.ini
-fileConfig(config.config_file_name)
+# 5. Set up Python logging per alembic.ini (with safety check)
+if config.config_file_name is not None:
+    fileConfig(config.config_file_name)
 
 # 6. Provide target_metadata for 'autogenerate'
 target_metadata = Base.metadata
@@ -43,11 +44,17 @@ def run_migrations_offline():
 
 def run_migrations_online():
     """Run migrations in 'online' mode: connect to DB and apply."""
+    # Get the configuration section with safety check
+    configuration = config.get_section(config.config_ini_section)
+    if configuration is None:
+        configuration = {}
+    
     connectable = engine_from_config(
-        config.get_section(config.config_ini_section),
+        configuration,
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
     )
+    
     with connectable.connect() as connection:
         context.configure(
             connection=connection,
