@@ -2,7 +2,8 @@ import logging
 
 from app.core.celery_app import celery_app
 from app.db.crud import save_event
-from app.services.openai_client import check_text
+from app.services.hugging_face_client import check_text_hf
+# from app.services.openai_client import check_text
 
 
 logger = logging.getLogger(__name__)
@@ -15,7 +16,8 @@ def scan_text(self, content: str, source_id: str):
         if not content.strip():
             verdict, scores = "clean", {}
         else:
-            verdict, scores = check_text(content)
+            verdict, scores = check_text_hf(content)
+            # verdict, scores = check_text(content)
 
         try:
             event = save_event("text", source_id, verdict, scores)
@@ -31,7 +33,7 @@ def scan_text(self, content: str, source_id: str):
             "content_length": len(content)
         }
 
-        logger.info(f"Completed text moderation: {result[verdict]} for {source_id}")
+        logger.info(f"Completed text moderation: {result["verdict"]} for {source_id}")
 
         return result
     

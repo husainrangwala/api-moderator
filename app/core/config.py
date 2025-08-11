@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     
     # External APIs
     OPENAI_API_KEY: str = ""
+    HUGGING_FACE_ACCESS_TOKEN: str = ""
     
     # Environment
     ENVIRONMENT: str = "development"
