@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from prometheus_client import make_asgi_app
 
 from app.api.v1 import health, moderation
 
@@ -17,9 +18,11 @@ def create_app() -> FastAPI:
 
     app.include_router(
         health.router,
-        prefix="/api/v1/health",
+        prefix="/health",
         tags=["health"]
     )
+
+    app.mount("/metrics", make_asgi_app())
     
     @app.get("/")
     def read_root():
